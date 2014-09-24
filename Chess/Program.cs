@@ -32,6 +32,22 @@ namespace Chess
         }
     }
 
+    public enum Direction
+    {
+        FORWARD,
+        BACKWARD,
+        LEFT,
+        RIGHT
+    }
+
+    public enum DiagnalDirection
+    {
+        FORWARD_LEFT,
+        FORWARD_RIGHT,
+        BACKWARD_LEFT,
+        BACKWARD_RIGHT
+    }
+
     static class Program
     {
         /// <summary>
