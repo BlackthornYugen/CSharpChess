@@ -8,6 +8,8 @@ namespace Chess
 {
     abstract class ChessPiece
     {
+        protected const int MAX_DISTANCE = 7;
+
         // Pawn fields
         protected bool canEnPassantLeft;
         protected bool canEnPassantRight;
@@ -44,7 +46,33 @@ namespace Chess
         /// <returns>Return an array for horizontal or virtical movment</returns>
         protected Point[] GetMovementArray(int distance, Direction direction)
         {
-            return new Point[] { new Point(1, 1) }; // TODO: Make this return good data.
+            Point[] movement = new Point[distance];
+            int xPosition = 0;
+            int yPosition = 0;
+
+            for (int i = 0; i < distance; i++)
+            {
+                switch (direction)
+                {
+                    case Direction.FORWARD:
+                        yPosition++;
+                        break;
+                    case Direction.BACKWARD:
+                        yPosition--;
+                        break;
+                    case Direction.LEFT:
+                        xPosition++;
+                        break;
+                    case Direction.RIGHT:
+                        xPosition--;
+                        break;
+                    default:
+                        break;
+                }
+                movement[i] = new Point(xPosition, yPosition);
+            }
+            return movement;
+
         }
 
         /// <summary>
@@ -56,7 +84,36 @@ namespace Chess
         /// <returns>Return an array for diagnal movement</returns>
         protected Point[] GetDiagnalMovementArray(int distance, DiagnalDirection direction)
         {
-            return new Point[]{new Point(1,1)}; // TODO: Make this return good data.
+            Point[] attack = new Point[distance];
+            int xPosition = 0;
+            int yPosition = 0;
+
+            for (int i = 0; i < distance; i++)
+            {
+                switch (direction)
+                {
+                    case DiagnalDirection.FORWARD_LEFT:
+                        xPosition--;
+                        yPosition++;
+                        break;
+                    case DiagnalDirection.FORWARD_RIGHT:
+                        xPosition++;
+                        yPosition++;
+                        break;
+                    case DiagnalDirection.BACKWARD_LEFT:
+                        xPosition--;
+                        yPosition--;
+                        break;
+                    case DiagnalDirection.BACKWARD_RIGHT:
+                        xPosition++;
+                        yPosition--;
+                        break;
+                    default:
+                        break;
+                }
+                attack[i] = new Point(xPosition, yPosition);
+            }
+            return attack;
         }
     }
 }

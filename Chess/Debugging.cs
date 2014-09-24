@@ -14,6 +14,7 @@ namespace Chess
     {
         ChessPiece[] chessPieces = { new Knight(), new Pawn(), new Bishop(), new Queen(), new King(), new Rook() };
         ChessPiece pawn = new Pawn(doubleJump: false);
+        ChessPiece king = new King(castle: false);
 
         public Debugging()
         {
@@ -23,7 +24,7 @@ namespace Chess
             this.SuspendLayout();
             
             noDoubleJumpPawnButton.Tag = pawn;
-
+            noCastleKingButton.Tag = king;
             for (int i = 0; i < chessPieces.Length; i++)
             {
                 Button loopButton = new System.Windows.Forms.Button();

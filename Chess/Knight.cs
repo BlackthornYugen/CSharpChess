@@ -15,7 +15,11 @@ namespace Chess
 
         public override ChessPiece CalculateMoves()
         {
-            availableMoves = new Point[0][];
+            availableMoves = new Point[8][] { 
+                new[] { new Point(1, 3) },      new[] {new Point(3, 1)},
+                new[] { new Point(-1, -3) },    new[] {new Point(-3, -1)},
+                new[] { new Point(-1, 3) },     new[] {new Point(-3, 1)},
+                new[] { new Point(1, -3) },     new[] {new Point(3, -1)} };
             availableAttacks = availableMoves;
             return this;
         }
