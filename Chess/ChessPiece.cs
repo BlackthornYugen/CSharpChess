@@ -13,26 +13,8 @@ namespace Chess
         protected bool canEnPassantRight;
         protected bool canDoubleJump;
 
-        public bool CanEnPassantLeft
-        {
-            get { return canEnPassantLeft; }
-            set { canEnPassantLeft = value; }
-        }
-
-        public bool CanEnPassantRight
-        {
-            get { return canEnPassantRight; }
-            set { canEnPassantRight = value; }
-        }
-
         // Other fields
         protected bool canCastle;
-
-        public bool CanCastle
-        {
-            get { return canCastle; }
-            set { canCastle = value; }
-        }
         protected Point[][] availableMoves; //[direction, time, coordinate
 
         public Point[][] AvailableMoves

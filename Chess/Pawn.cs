@@ -17,8 +17,8 @@ namespace Chess
         public Pawn(bool doubleJump = true, bool enPassantLeft = false, bool enPassantRight = false)
         {
             this.canDoubleJump = doubleJump;
-            this.CanEnPassantLeft = enPassantLeft;
-            this.CanEnPassantRight = enPassantRight;
+            this.canEnPassantLeft = enPassantLeft;
+            this.canEnPassantRight = enPassantRight;
             CalculateMoves();
         }
 
@@ -32,6 +32,40 @@ namespace Chess
                 availableMoves[0][1] = new Point(0, 2);
             }
             return this;
+        }
+
+        public bool CanDoubleJump 
+        {
+            get
+            {
+                return this.canDoubleJump;
+            }
+            set
+            {
+                this.canDoubleJump = value;
+            }
+        }
+        public bool CanEnPassantLeft
+        {
+            get
+            {
+                return this.canEnPassantLeft;
+            }
+            set
+            {
+                this.canEnPassantLeft = value;
+            }
+        }
+        public bool CanEnPassantRight
+        {
+            get
+            {
+                return this.canEnPassantRight;
+            }
+            set
+            {
+                this.canEnPassantRight = value;
+            }
         }
     }
 }

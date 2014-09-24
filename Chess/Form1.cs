@@ -13,7 +13,9 @@ namespace Chess
     public partial class Form1 : Form
     {
         ChessPiece chessPiece = new ChessPiece();
-        ChessPiece pawn = new Pawn(doubleJump:false);
+        ChessPiece pawn = new Pawn(doubleJump: false);
+        ChessPiece king = new King();
+        ChessPiece rook = new Rook();
         public Form1()
         {
             InitializeComponent();
