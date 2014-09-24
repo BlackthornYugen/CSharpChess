@@ -16,6 +16,7 @@ namespace Chess
         ChessPiece pawn = new Pawn(doubleJump: false);
         ChessPiece king = new King();
         ChessPiece rook = new Rook();
+
         public Form1()
         {
             InitializeComponent();

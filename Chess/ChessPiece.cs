@@ -40,11 +40,11 @@ namespace Chess
         /// Used by: King, Queen, Pawn, Rook
         /// </summary>
         /// <param name="distance">How far in the given direction.</param>
-        /// <param name="direction">This will probably become an enum</param>
+        /// <param name="direction">Direction relative to player</param>
         /// <returns>Return an array for horizontal or virtical movment</returns>
         protected Point[] GetMovementArray(int distance, Direction direction)
         {
-            throw new NotImplementedException();
+            return new Point[] { new Point(1, 1) }; // TODO: Make this return good data.
         }
 
         /// <summary>
@@ -56,7 +56,7 @@ namespace Chess
         /// <returns>Return an array for diagnal movement</returns>
         protected Point[] GetDiagnalMovementArray(int distance, DiagnalDirection direction)
         {
-            throw new NotImplementedException();
+            return new Point[]{new Point(1,1)}; // TODO: Make this return good data.
         }
     }
 }

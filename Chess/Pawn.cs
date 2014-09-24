@@ -22,7 +22,7 @@ namespace Chess
             CalculateMoves();
         }
 
-        private Pawn CalculateMoves()
+        public override ChessPiece CalculateMoves()
         {
             availableMoves = new Point[1][];
             availableMoves[0] = new Point[1] {new Point(0, 1)};

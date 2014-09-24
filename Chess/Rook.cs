@@ -11,6 +11,7 @@ namespace Chess
         public Rook(bool castle = true)
         {
             this.canCastle = castle;
+            CalculateMoves();
         }
 
         public bool CanCastle
