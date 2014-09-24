@@ -13,7 +13,7 @@ namespace Chess
     public partial class Form1 : Form
     {
         ChessPiece chessPiece = new ChessPiece();
-        ChessPiece pawn = new Pawn();
+        ChessPiece pawn = new Pawn(doubleJump:false);
         public Form1()
         {
             InitializeComponent();
@@ -22,21 +22,27 @@ namespace Chess
         private void button1_Click(object sender, EventArgs e)
         {
             textBox1.Text = "";
-            foreach (bool item in chessPiece.GetAvailableMoves())
+            for (int i = 0; i < chessPiece.AvailableMoves.Length; i++)
             {
-                textBox1.Text += item.ToString() + " ";
+                for (int j = 0; j < chessPiece.AvailableMoves[i].Length; j++)
+                {
+                    textBox1.Text += chessPiece.AvailableMoves[i][j].ToString() + ", ";
+                }
+                textBox1.Text += "\r\n";
             }
-            //textBox1.Text = chessPiece.Foo();
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
             textBox1.Text = "";
-            foreach (bool item in pawn.GetAvailableMoves())
+            for (int i = 0; i < pawn.AvailableMoves.Length; i++)
             {
-                textBox1.Text += item.ToString() + " ";
+                for (int j = 0; j < pawn.AvailableMoves[i].Length; j++)
+                {
+                    textBox1.Text += pawn.AvailableMoves[i][j].ToString() + ", ";
+                }
+                textBox1.Text += "\r\n";
             }
-            //textBox1.Text = pawn.Foo();
         }
     }
 }

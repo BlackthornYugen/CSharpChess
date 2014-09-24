@@ -8,35 +8,48 @@ namespace Chess
 {
     class ChessPiece
     {
-        protected bool canEnPassant;
+        // Pawn fields
+        protected bool canEnPassantLeft;
+        protected bool canEnPassantRight;
+        protected bool canDoubleJump;
+
+        public bool CanEnPassantLeft
+        {
+            get { return canEnPassantLeft; }
+            set { canEnPassantLeft = value; }
+        }
+
+        public bool CanEnPassantRight
+        {
+            get { return canEnPassantRight; }
+            set { canEnPassantRight = value; }
+        }
+
+        // Other fields
         protected bool canCastle;
 
+        public bool CanCastle
+        {
+            get { return canCastle; }
+            set { canCastle = value; }
+        }
+        protected Point[][] availableMoves; //[direction, time, coordinate
+
+        public Point[][] AvailableMoves
+        {
+            get { return availableMoves; }
+        }
+        
         public ChessPiece()
         {
+            CalculateMoves();
         }
 
-        public virtual string Foo()
+        public virtual ChessPiece CalculateMoves()
         {
-            return "Foo " + canEnPassant;
-        }
-
-        public virtual bool[,] GetAvailableMoves()
-        {
-            bool[,] moveList = new bool[8, 8];
-            if (canEnPassant)
-            {
-                moveList[2, 2] = true;
-            }
-            return moveList;
-        }
-        public virtual bool[,] GetAvailableAttacks()
-        {
-            bool[,] moveList = new bool[8, 8];
-            if (canEnPassant)
-            {
-                moveList[2, 2] = true;
-            }
-            return moveList;
+            // Base piece can't move.
+            availableMoves = new Point[0][]; 
+            return this;
         }
     }
 }
