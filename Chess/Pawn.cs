@@ -25,12 +25,17 @@ namespace Chess
         public override ChessPiece CalculateMoves()
         {
             availableMoves = new Point[1][];
-            availableMoves[0] = new Point[1] {new Point(0, 1)};
             if (this.canDoubleJump)
             {
-                Array.Resize<Point>(ref availableMoves[0], 2);
-                availableMoves[0][1] = new Point(0, 2);
+                availableMoves[0] = GetMovementArray(2, Direction.FORWARD);
             }
+            else
+            {
+                availableMoves[0] = GetMovementArray(1, Direction.FORWARD);
+            }
+            availableAttacks = new Point[2][];
+            availableAttacks[0] = GetDiagnalMovementArray(1, DiagnalDirection.FORWARD_LEFT);
+            availableAttacks[1] = GetDiagnalMovementArray(1, DiagnalDirection.FORWARD_RIGHT);
             return this;
         }
 

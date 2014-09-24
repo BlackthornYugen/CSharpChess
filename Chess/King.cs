@@ -36,8 +36,8 @@ namespace Chess
             availableMoves[6] = GetDiagnalMovementArray(1, DiagnalDirection.BACKWARD_LEFT);
             availableMoves[7] = GetDiagnalMovementArray(1, DiagnalDirection.BACKWARD_RIGHT);
 
-
-            availableAttacks = availableMoves;
+            availableAttacks = new Point[8][];
+            Array.Copy(availableMoves, 0, availableAttacks, 0, 8);
             return this;
         }
 

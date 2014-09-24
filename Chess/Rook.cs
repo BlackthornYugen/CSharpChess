@@ -14,6 +14,13 @@ namespace Chess
             CalculateMoves();
         }
 
+        public override ChessPiece CalculateMoves()
+        {
+            availableMoves = new Point[0][];
+            availableAttacks = availableMoves;
+            return this;
+        }
+
         public bool CanCastle
         {
             get

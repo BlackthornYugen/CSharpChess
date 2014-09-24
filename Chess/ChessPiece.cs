@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Chess
 {
-    class ChessPiece
+    abstract class ChessPiece
     {
         // Pawn fields
         protected bool canEnPassantLeft;
@@ -22,18 +22,18 @@ namespace Chess
         {
             get { return availableMoves; }
         }
+
+        public Point[][] AvailableAttacks
+        {
+            get { return availableAttacks; }
+        }
         
         public ChessPiece()
         {
             CalculateMoves();
         }
 
-        public virtual ChessPiece CalculateMoves()
-        {
-            // Base piece can't move.
-            availableMoves = new Point[0][]; 
-            return this;
-        }
+        public abstract ChessPiece CalculateMoves();
 
         /// <summary>
         /// Get relative horizontal or virtical movement coordinates
