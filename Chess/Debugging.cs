@@ -47,8 +47,8 @@ namespace Chess
         private void ChessPiece_Click(object sender, EventArgs e)
         {
             ChessPiece senderPiece = (ChessPiece)((Button)sender).Tag;
-            textBox1.Text = "Movement\r\n" + DumpAvailableMoves(senderPiece);
-            textBox1.Text += "Attack\r\n" + DumpAttackMoves(senderPiece);
+            textBox1.Text = senderPiece.GetType() + " Movement\r\n" + DumpAvailableMoves(senderPiece);
+            textBox1.Text += senderPiece.GetType() + " Attack\r\n" + DumpAttackMoves(senderPiece);
         }
 
         private string DumpAvailableMoves(ChessPiece chessPiece)

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Chess
 {
-    class Rook : ChessPiece
+    public class Rook : ChessPiece
     {
         public Rook(bool castle = true)
         {

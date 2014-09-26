@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Chess
 {
-    abstract class ChessPiece
+    public abstract class ChessPiece
     {
         protected const int MAX_DISTANCE = 7;
 
@@ -72,7 +72,6 @@ namespace Chess
                 movement[i] = new Point(xPosition, yPosition);
             }
             return movement;
-
         }
 
         /// <summary>
