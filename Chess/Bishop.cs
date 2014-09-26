@@ -12,6 +12,11 @@ namespace Chess
         {
             CalculateMoves();
         }
+        public Bishop(int player)
+        {
+            base.Player = player;
+            CalculateMoves();
+        }
 
         public override ChessPiece CalculateMoves()
         {

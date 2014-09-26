@@ -12,6 +12,10 @@ namespace Chess
         {
             CalculateMoves();
         }
+        public Queen(int player)
+        {
+            CalculateMoves();
+        }
 
         public override ChessPiece CalculateMoves()
         {

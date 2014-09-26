@@ -12,14 +12,18 @@ namespace Chess
         {
             CalculateMoves();
         }
+        public Knight(int player)
+        {
+            CalculateMoves();
+        }
 
         public override ChessPiece CalculateMoves()
         {
             availableMoves = new Point[8][] { 
-                new[] { new Point(1, 3) },      new[] {new Point(3, 1)},
-                new[] { new Point(-1, -3) },    new[] {new Point(-3, -1)},
-                new[] { new Point(-1, 3) },     new[] {new Point(-3, 1)},
-                new[] { new Point(1, -3) },     new[] {new Point(3, -1)} };
+                new[] { new Point(1, 2) },      new[] {new Point(2, 1)},
+                new[] { new Point(-1, -2) },    new[] {new Point(-2, -1)},
+                new[] { new Point(-1, 2) },     new[] {new Point(-2, 1)},
+                new[] { new Point(1, -2) },     new[] {new Point(2, -1)} };
             availableAttacks = availableMoves;
             return this;
         }

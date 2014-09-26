@@ -8,9 +8,26 @@ namespace Chess
 {
     public class Rook : ChessPiece
     {
-        public Rook(bool castle = true)
+        public Rook()
+        {
+            this.canCastle = true;
+            CalculateMoves();
+        }
+
+        public Rook(bool castle)
         {
             this.canCastle = castle;
+            CalculateMoves();
+        }
+
+        public Rook(bool castle, int player = 0)
+        {
+            this.canCastle = castle;
+            CalculateMoves();
+        }
+
+        public Rook(int player)
+        {
             CalculateMoves();
         }
 

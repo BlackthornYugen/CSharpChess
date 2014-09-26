@@ -8,14 +8,28 @@ namespace Chess
 {
     class Pawn : ChessPiece
     {
+        public Pawn()
+        {
+            this.canDoubleJump = true;
+            CalculateMoves();
+        }
+
+        public Pawn(int player)
+        {
+            base.Player = player;
+            this.canDoubleJump = true;
+            CalculateMoves();
+        }
+        
         /// <summary>
         /// Create a new pawn.
         /// </summary>
         /// <param name="doubleJump">Allows the pawn to move two squares.</param>
         /// <param name="enPassantLeft">Allows the pawn to en passant on the left.</param>
         /// <param name="enPassantRight">Allows the pawn to en passant on the right.</param>
-        public Pawn(bool doubleJump = true, bool enPassantLeft = false, bool enPassantRight = false)
+        public Pawn(int player = 0, bool doubleJump = true, bool enPassantLeft = false, bool enPassantRight = false)
         {
+            base.Player = player;
             this.canDoubleJump = doubleJump;
             this.canEnPassantLeft = enPassantLeft;
             this.canEnPassantRight = enPassantRight;
@@ -24,18 +38,33 @@ namespace Chess
 
         public override ChessPiece CalculateMoves()
         {
-            availableMoves = new Point[1][];
-            if (this.canDoubleJump)
+            Direction forward;
+            DiagnalDirection forwardLeft, forwardRight;
+
+            if (base.Player == 1)
             {
-                availableMoves[0] = GetMovementArray(2, Direction.FORWARD);
+                forward = Direction.BACKWARD;
+                forwardLeft = DiagnalDirection.BACKWARD_LEFT;
+                forwardRight = DiagnalDirection.BACKWARD_RIGHT;
             }
             else
             {
-                availableMoves[0] = GetMovementArray(1, Direction.FORWARD);
+                forward = Direction.FORWARD;
+                forwardLeft = DiagnalDirection.FORWARD_LEFT;
+                forwardRight = DiagnalDirection.FORWARD_RIGHT;
+            }
+            availableMoves = new Point[1][];
+            if (this.canDoubleJump)
+            {
+                availableMoves[0] = GetMovementArray(2, forward);
+            }
+            else
+            {
+                availableMoves[0] = GetMovementArray(1, forward);
             }
             availableAttacks = new Point[2][];
-            availableAttacks[0] = GetDiagnalMovementArray(1, DiagnalDirection.FORWARD_LEFT);
-            availableAttacks[1] = GetDiagnalMovementArray(1, DiagnalDirection.FORWARD_RIGHT);
+            availableAttacks[0] = GetDiagnalMovementArray(1, forwardLeft);
+            availableAttacks[1] = GetDiagnalMovementArray(1, forwardRight);
             return this;
         }
 

@@ -8,7 +8,20 @@ namespace Chess
 {
     public class King : ChessPiece
     {
-        public King(bool castle = true)
+        public King()
+        {
+            this.canCastle = true;
+            CalculateMoves();
+        }
+
+        public King(int player)
+        {
+            base.Player = player;
+            this.canCastle = true;
+            CalculateMoves();
+        }
+
+        public King(bool castle)
         {
             this.canCastle = castle;
             CalculateMoves();

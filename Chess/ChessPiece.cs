@@ -19,6 +19,7 @@ namespace Chess
         protected bool canCastle; // For rooks and kings
         protected Point[][] availableMoves; // Jagged array for moves ([direction][distance])
         protected Point[][] availableAttacks; // Same as Moves unless your a pawn.
+        private int player;
 
         public Point[][] AvailableMoves
         {
@@ -34,6 +35,12 @@ namespace Chess
         {
             CalculateMoves();
         }
+
+        public int Player
+        {
+            get { return player; }
+            set { player = value; }
+        } 
 
         public abstract ChessPiece CalculateMoves();
 
