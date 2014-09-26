@@ -40,7 +40,6 @@ namespace Chess
         {
             Direction forward;
             DiagnalDirection forwardLeft, forwardRight;
-
             if (base.Player == 1)
             {
                 forward = Direction.BACKWARD;
@@ -53,6 +52,7 @@ namespace Chess
                 forwardLeft = DiagnalDirection.FORWARD_LEFT;
                 forwardRight = DiagnalDirection.FORWARD_RIGHT;
             }
+
             availableMoves = new Point[1][];
             if (this.canDoubleJump)
             {

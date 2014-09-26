@@ -46,6 +46,7 @@ namespace FormClient
             DrawPieces(chessBoard.BoardArray);
             if (!(s is Button)) return;
             Button button = (Button)s;
+            button.FlatStyle = FlatStyle.Standard;
 
             if (!(button.Tag is ChessPiece)) return;
             ChessPiece chessPiece = (ChessPiece) button.Tag;
@@ -93,6 +94,7 @@ namespace FormClient
                 for (int y = 0; y < boardArray.GetLength(1); y++)
                 {
                     Button button = (Button)boardLayoutPanel.GetControlFromPosition(x + 1, y + 1);
+                    button.FlatStyle = FlatStyle.Flat;
                     if (boardArray[x, y] != null)
                     {
                         ChessPiece chessPiece = boardArray[x, y];

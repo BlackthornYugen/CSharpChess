@@ -17,9 +17,10 @@ namespace Chess
             SetupBoard();
         }
 
+        // TODO: Get rid of this property. the board array should not be exposed.
         public ChessPiece[,] BoardArray
         {
-            get { return boardArray; } // TODO: Get rid of this method. Should not expose boardArray.
+            get { return boardArray; } 
         }
 
         private ChessBoard SetupBoard()
@@ -33,10 +34,12 @@ namespace Chess
 
             for (int i = 0; i < COLUMNS; i++)
             {
+                // Player 0 pieces
                 boardArray[i, 0] =          (ChessPiece)Activator.CreateInstance(
                                                 Type.GetType("Chess." + playerPeices[i]));
                 boardArray[i, 1] =          (ChessPiece)Activator.CreateInstance(
                                                 Type.GetType("Chess." + playerPeices[i + COLUMNS]));
+                // Player 1 pieces
                 boardArray[i, ROWS - 1] =   (ChessPiece)Activator.CreateInstance(
                                                 Type.GetType("Chess." + playerPeices[i]), new object[] { 1 });
                 boardArray[i, ROWS - 2] =   (ChessPiece)Activator.CreateInstance(
