@@ -10,8 +10,8 @@ namespace Chess
     {
         private ChessPiece[,] boardArray;
         private const int COLUMNS = 8;
-        private int ROWS = 8; 
-        
+        private int ROWS = 8;
+
         public ChessBoard()
         {
             SetupBoard();
@@ -50,6 +50,110 @@ namespace Chess
                                                 Type.GetType("Chess." + playerPeices[i + COLUMNS]), new object[] { 1 });
             }
             return this;
+        }
+
+        /// <summary>
+        /// Calculate the actual actions available for a Chess Piece at a set of coordinates.
+        /// </summary>
+        /// <param name="x">The number of squares right of the bottom left square</param>
+        /// <param name="y">The number of squares above the bottom left square</param>
+        /// <param name="ignoreCheck">Do not check for threats to the king</param>
+        /// <param name="boardArray">An optional substitute board</param>
+        /// <returns>A list of points that can be moved to</returns>
+        public List<Point> PieceActions(int x, int y, bool ignoreCheck = false, ChessPiece[,] boardArray = null)
+        {
+            if (boardArray == null)
+            {
+                boardArray = this.boardArray;
+            }
+
+            List<Point> availableActions = new List<Point>();
+            ChessPiece movingPeice = boardArray[x, y];
+            
+            foreach (Point[] direction in movingPeice.AvailableAttacks)
+            {
+                foreach (Point attackPoint in direction)
+                {
+                    // If player's king is in check after move, CONTINUE
+                    Point adjustedPoint = new Point(attackPoint.x + x, attackPoint.y + y);
+                    if (adjustedPoint.x >= 0 && adjustedPoint.x < boardArray.GetLength(0) && 
+                        adjustedPoint.y >= 0 && adjustedPoint.y < boardArray.GetLength(1))
+                    {
+                        availableActions.Add(adjustedPoint);
+                    }
+                    // If square occupided, BREAK
+                }
+            }
+
+            if(movingPeice.AvailableAttacks != movingPeice.AvailableMoves)
+            {
+                foreach (Point[] direction in movingPeice.AvailableMoves)
+                {
+                    foreach (Point movePoint in direction)
+                    {
+                        // If player's king is in check after move, CONTINUE
+                        // If square occupided, BREAK
+                        Point adjustedPoint = new Point(movePoint.x + x, movePoint.y + y);
+                        availableActions.Add(movePoint);
+                        if (adjustedPoint.x >= 0 && adjustedPoint.x < boardArray.GetLength(0) &&
+                            adjustedPoint.y >= 0 && adjustedPoint.y < boardArray.GetLength(1))
+                        {
+                            availableActions.Add(adjustedPoint);
+                        }
+                    }
+                }
+            }
+
+            // If movingPeice is king with "canCastle", alter moves if conditions met
+            // If movingPeice is pawn with canEnPassant or canDoubleJump, alter moves if conditions met
+
+            return availableActions;
+        }
+
+        public List<Point> PieceActions(Point position, bool ignoreCheck = false, ChessPiece[,] boardArray = null)
+        {
+            return PieceActions(position.x, position.y, ignoreCheck, boardArray);
+        }
+
+        public ChessBoard ActionPiece(int fromX, int fromY, int toX, int toY)
+        {
+            ChessPiece movingPeice = boardArray[fromX, fromY];
+            movingPeice.CalculateMoves();
+            return this;
+        }
+
+        public ChessBoard ActionPiece(Point from, Point to)
+        {
+            return ActionPiece(from.x, from.y, to.x, to.y);
+        }
+
+        /// <summary>
+        /// Find out if a square is vulnerable to attacks by another player.
+        /// </summary>
+        /// <param name="player">The vulnerable player</param>
+        /// <param name="boardArray">An optional substitute board for validating moves</param>
+        /// <returns>True if square can be attacked</returns>
+        public bool CheckSquareVulnerable(int squareX, int squareY, int player, ChessPiece[,] boardArray = null)
+        {
+            if (boardArray == null)
+            {
+                boardArray = this.boardArray;
+            }
+
+            for (int x = 0; x < boardArray.GetLength(0); x++)
+            {
+                for (int y = 0; y < boardArray.GetLength(1); y++)
+                {
+                    foreach (Point point in PieceActions(x,y,false))
+                    {
+                        if (point.x == squareX && point.y == squareY)
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
         }
     }
 }
