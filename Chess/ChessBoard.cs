@@ -77,7 +77,7 @@ namespace Chess
                 {
                     // If player's king is in check after move, CONTINUE
                     Point adjustedPoint = new Point(attackPoint.x + x, attackPoint.y + y);
-                    if (ValidX(adjustedPoint.x) && ValidY(adjustedPoint.y))
+                    if (ValidatePoint(adjustedPoint))
                     {
                         availableActions.Add(adjustedPoint);
                     }
@@ -95,7 +95,7 @@ namespace Chess
                         // If square occupided, BREAK
                         Point adjustedPoint = new Point(movePoint.x + x, movePoint.y + y);
                         availableActions.Add(movePoint);
-                        if (ValidX(adjustedPoint.x) && ValidY(adjustedPoint.y))
+                        if (ValidatePoint(adjustedPoint))
                         {
                             availableActions.Add(adjustedPoint);
                         }
@@ -117,7 +117,7 @@ namespace Chess
                     attackPoint.y *= flipDirection;
                     attackPoint.y += y;
                     attackPoint.x += x;
-                    if (ValidX(attackPoint.x) && ValidY(attackPoint.y))
+                    if (ValidatePoint(attackPoint))
                     {
                         availableActions.Add(attackPoint);
                     }
@@ -129,7 +129,7 @@ namespace Chess
                     attackPoint.y *= flipDirection;
                     attackPoint.y += y;
                     attackPoint.x += x;
-                    if (ValidX(attackPoint.x) && ValidY(attackPoint.y))
+                    if (ValidatePoint(attackPoint))
                     {
                         availableActions.Add(attackPoint);
                     }
@@ -184,19 +184,24 @@ namespace Chess
             return false;
         }
 
-        private bool ValidRange(int value, int high, int low = -1)
+        private bool ValidateRange(int value, int high, int low = -1)
         {
             return value > low && value < high;
         }
 
-        public bool ValidX(int value)
+        public bool ValidateX(int value)
         {
-            return ValidRange(value, boardArray.GetLength(0));
+            return ValidateRange(value, boardArray.GetLength(0));
         }
 
-        public bool ValidY(int value)
+        public bool ValidateY(int value)
         {
-            return ValidRange(value, boardArray.GetLength(1));
+            return ValidateRange(value, boardArray.GetLength(1));
+        }
+
+        public bool ValidatePoint(Point point)
+        {
+            return ValidateX(point.x) && ValidateY(point.y);
         }
     }
 }
