@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.boardLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
@@ -46,10 +47,11 @@
             this.label15 = new System.Windows.Forms.Label();
             this.label16 = new System.Windows.Forms.Label();
             this.label17 = new System.Windows.Forms.Label();
+            this.coordinates = new System.Windows.Forms.ToolTip(this.components);
             this.boardLayoutPanel.SuspendLayout();
             this.SuspendLayout();
             // 
-            // tableLayoutPanel1
+            // boardLayoutPanel
             // 
             this.boardLayoutPanel.ColumnCount = 9;
             this.boardLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
@@ -80,7 +82,7 @@
             this.boardLayoutPanel.Controls.Add(this.label17, 0, 8);
             this.boardLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.boardLayoutPanel.Location = new System.Drawing.Point(0, 0);
-            this.boardLayoutPanel.Name = "tableLayoutPanel1";
+            this.boardLayoutPanel.Name = "boardLayoutPanel";
             this.boardLayoutPanel.RowCount = 9;
             this.boardLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20F));
             this.boardLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 10F));
@@ -333,6 +335,7 @@
         private System.Windows.Forms.Label label15;
         private System.Windows.Forms.Label label16;
         private System.Windows.Forms.Label label17;
+        private System.Windows.Forms.ToolTip coordinates;
     }
 }
 

@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using Chess;
 using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Chess;
 
 namespace FormClient
 {
@@ -34,14 +34,14 @@ namespace FormClient
                     if ((x + y) % 2 == 1) button.BackColor = Color.Gray;
                     else button.BackColor = Color.DarkGray;
                     boardLayoutPanel.Controls.Add(button);
-                    button.Click += new EventHandler(Click_Piece);
+                    button.Click += Select_Piece;
                 }
             }
 
             DrawPieces(chessBoard);
         }
 
-        private void Click_Piece(object s, EventArgs e)
+        private void Select_Piece(object s, EventArgs e)
         {
             DrawPieces(chessBoard);
             if (!(s is Button)) return;
@@ -50,41 +50,22 @@ namespace FormClient
 
             if (!(button.Tag is ChessPiece)) return;
             ChessPiece chessPiece = (ChessPiece) button.Tag;
+            TableLayoutPanelCellPosition a = boardLayoutPanel.GetPositionFromControl((Control)s);
+            Console.WriteLine("({2}, {3}) - {0} from team {1}", chessPiece.GetType(), chessPiece.Player, a.Column - 1, a.Row - 1);
 
-            Console.WriteLine("{0} from team {1}", s, chessPiece.Player);
-            var moves = chessPiece.AvailableMoves;
-            var attacks = chessPiece.AvailableAttacks;
-
-            foreach (var item in moves)
+            foreach (Chess.Point point in chessBoard.PieceActions(a.Column - 1, a.Row - 1))
             {
-                foreach (var item2 in item)
-                {
-                    var buttonPosition = boardLayoutPanel.GetPositionFromControl((Control)s);
-                    int x = item2.x + buttonPosition.Column;
-                    int y = item2.y + buttonPosition.Row;
-                    if (x > 0 && x < 9 && y > 0 && y < 9)
-                    {
-                        boardLayoutPanel.GetControlFromPosition(x, y).ForeColor = Color.Yellow;
-                        boardLayoutPanel.GetControlFromPosition(x, y).Text = "x";
-                    }
-                }
-            }
-
-            foreach (var item in attacks)
-            {
-                foreach (var item2 in item)
-                {
-                    var buttonPosition = boardLayoutPanel.GetPositionFromControl((Control)s);
-                    int x = item2.x + buttonPosition.Column;
-                    int y = item2.y + buttonPosition.Row;
-                    if (x > 0 && x < 9 && y > 0 && y < 9)
-                    {
-                        boardLayoutPanel.GetControlFromPosition(x, y).ForeColor = Color.Red;
-                        boardLayoutPanel.GetControlFromPosition(x, y).Text = "x";
-                    }
-                }
+                Button actionButton = (Button)boardLayoutPanel.GetControlFromPosition(point.x + 1, point.y + 1);
+                actionButton.FlatStyle = FlatStyle.Standard;
+                Console.WriteLine("~({0}, {1})", point.x, point.y);
             }
             Console.WriteLine();
+        }
+
+        private void Action_Piece(object s, EventArgs e)
+        {
+            Button actionButton = (Button)s;
+            MessageBox.Show("");
         }
 
         private void DrawPieces(ChessBoard board)
@@ -107,6 +88,7 @@ namespace FormClient
                     {
                         button.Text = "";
                     }
+                    this.coordinates.SetToolTip(button, String.Format("({0}, {1})", x, y));
                 }
             }
         }
