@@ -14,7 +14,8 @@ namespace FormClient
     public partial class Form1 : Form
     {
         ChessBoard chessBoard = new ChessBoard();
-        Chess.Point selectedPiece = new Chess.Point(-1, -1);
+        Chess.Point selectedPiece = new Chess.Point();
+        int selectedPlayer = -1;
 
         public Form1()
         {
@@ -52,10 +53,10 @@ namespace FormClient
 
             if (!(button.Tag is ChessPiece))
             {
-                if (selectedPiece.x > -1 && selectedPiece.y > -1)
+                if (selectedPlayer > -1)
                 {
                     chessBoard.ActionPiece(selectedPiece.x, selectedPiece.y, a.Column - 1, a.Row - 1);
-                    selectedPiece.x = selectedPiece.y = -1;
+                    selectedPlayer = -1;
                     DrawPieces(chessBoard);
                 }
                 return;
@@ -64,21 +65,25 @@ namespace FormClient
             ChessPiece chessPiece = (ChessPiece) button.Tag;
             Console.WriteLine("({2}, {3}) - {0} from team {1}", chessPiece.GetType(), chessPiece.Player, a.Column - 1, a.Row - 1);
 
-            foreach (Chess.Point point in chessBoard.PieceActions(a.Column - 1, a.Row - 1))
+            if (selectedPlayer > -1 && selectedPlayer != chessPiece.Player)
             {
-                Button actionButton = (Button)boardLayoutPanel.GetControlFromPosition(point.x + 1, point.y + 1);
-                actionButton.FlatStyle = FlatStyle.Standard;
+                chessBoard.ActionPiece(selectedPiece.x, selectedPiece.y, a.Column - 1, a.Row - 1);
+                selectedPlayer = -1;
+                DrawPieces(chessBoard);
+            }
+            else
+            {
+                selectedPlayer = chessPiece.Player;
                 selectedPiece.x = a.Column - 1;
                 selectedPiece.y = a.Row - 1;
-                Console.WriteLine("~({0}, {1})", point.x, point.y);
+                foreach (Chess.Point point in chessBoard.PieceActions(a.Column - 1, a.Row - 1))
+                {
+                    Button actionButton = (Button)boardLayoutPanel.GetControlFromPosition(point.x + 1, point.y + 1);
+                    actionButton.FlatStyle = FlatStyle.Standard;
+                    Console.WriteLine("~({0}, {1})", point.x, point.y);
+                }
+                Console.WriteLine();
             }
-            Console.WriteLine();
-        }
-
-        private void Action_Piece(object s, EventArgs e)
-        {
-            Button actionButton = (Button)s;
-            MessageBox.Show("");
         }
 
         private void DrawPieces(ChessBoard board)
