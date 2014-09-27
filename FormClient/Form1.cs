@@ -38,12 +38,12 @@ namespace FormClient
                 }
             }
 
-            DrawPieces(chessBoard.BoardArray);
+            DrawPieces(chessBoard);
         }
 
         private void Click_Piece(object s, EventArgs e)
         {
-            DrawPieces(chessBoard.BoardArray);
+            DrawPieces(chessBoard);
             if (!(s is Button)) return;
             Button button = (Button)s;
             button.FlatStyle = FlatStyle.Standard;
@@ -87,17 +87,17 @@ namespace FormClient
             Console.WriteLine();
         }
 
-        private void DrawPieces(ChessPiece[,] boardArray)
+        private void DrawPieces(ChessBoard board)
         {
-            for (int x = 0; x < boardArray.GetLength(0); x++)
+            for (int x = 0; x < board.GetLength(0); x++)
             {
-                for (int y = 0; y < boardArray.GetLength(1); y++)
+                for (int y = 0; y < board.GetLength(1); y++)
                 {
                     Button button = (Button)boardLayoutPanel.GetControlFromPosition(x + 1, y + 1);
                     button.FlatStyle = FlatStyle.Flat;
-                    if (boardArray[x, y] != null)
+                    if (board[x, y] != null)
                     {
-                        ChessPiece chessPiece = boardArray[x, y];
+                        ChessPiece chessPiece = board[x, y];
                         button.Tag = chessPiece;
                         button.Text = chessPiece.ToString().Replace("Chess.", "");
                         if (chessPiece.Player == 1) button.ForeColor = Color.White;

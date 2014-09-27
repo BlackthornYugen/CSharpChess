@@ -10,7 +10,7 @@
   <Class Name="Chess.ChessBoard" Collapsed="true">
     <Position X="1.75" Y="2.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAARAAAgEAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAgDAAAAAAAAAAAAAAAAABAAAgEAAA=</HashCode>
       <FileName>ChessBoard.cs</FileName>
     </TypeIdentifier>
   </Class>

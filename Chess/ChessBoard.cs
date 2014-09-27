@@ -17,10 +17,14 @@ namespace Chess
             SetupBoard();
         }
 
-        // TODO: Get rid of this property. the board array should not be exposed.
-        public ChessPiece[,] BoardArray
+        public int GetLength(int l)
         {
-            get { return boardArray; } 
+            return boardArray.GetLength(l);
+        }
+
+        public ChessPiece this[int x, int y]
+        {
+            get { return boardArray[x, y]; }
         }
 
         private ChessBoard SetupBoard()
