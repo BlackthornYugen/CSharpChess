@@ -67,6 +67,7 @@ namespace Chess
                 boardArray = this.boardArray;
             }
 
+            bool[,] legalActions = new bool[boardArray.GetLength(0), boardArray.GetLength(1)];
             List<Point> availableActions = new List<Point>();
             ChessPiece movingPeice = boardArray[x, y];
             
@@ -76,8 +77,7 @@ namespace Chess
                 {
                     // If player's king is in check after move, CONTINUE
                     Point adjustedPoint = new Point(attackPoint.x + x, attackPoint.y + y);
-                    if (adjustedPoint.x >= 0 && adjustedPoint.x < boardArray.GetLength(0) && 
-                        adjustedPoint.y >= 0 && adjustedPoint.y < boardArray.GetLength(1))
+                    if (ValidX(adjustedPoint.x) && ValidY(adjustedPoint.y))
                     {
                         availableActions.Add(adjustedPoint);
                     }
@@ -95,8 +95,7 @@ namespace Chess
                         // If square occupided, BREAK
                         Point adjustedPoint = new Point(movePoint.x + x, movePoint.y + y);
                         availableActions.Add(movePoint);
-                        if (adjustedPoint.x >= 0 && adjustedPoint.x < boardArray.GetLength(0) &&
-                            adjustedPoint.y >= 0 && adjustedPoint.y < boardArray.GetLength(1))
+                        if (ValidX(adjustedPoint.x) && ValidY(adjustedPoint.y))
                         {
                             availableActions.Add(adjustedPoint);
                         }
@@ -118,8 +117,7 @@ namespace Chess
                     attackPoint.y *= flipDirection;
                     attackPoint.y += y;
                     attackPoint.x += x;
-                    if (attackPoint.x >= 0 && attackPoint.x < boardArray.GetLength(0) &&
-                            attackPoint.y >= 0 && attackPoint.y < boardArray.GetLength(1))
+                    if (ValidX(attackPoint.x) && ValidY(attackPoint.y))
                     {
                         availableActions.Add(attackPoint);
                     }
@@ -131,8 +129,7 @@ namespace Chess
                     attackPoint.y *= flipDirection;
                     attackPoint.y += y;
                     attackPoint.x += x;
-                    if (attackPoint.x >= 0 && attackPoint.x < boardArray.GetLength(0) &&
-                            attackPoint.y >= 0 && attackPoint.y < boardArray.GetLength(1))
+                    if (ValidX(attackPoint.x) && ValidY(attackPoint.y))
                     {
                         availableActions.Add(attackPoint);
                     }
@@ -185,6 +182,21 @@ namespace Chess
                 }
             }
             return false;
+        }
+
+        private bool ValidRange(int value, int high, int low = -1)
+        {
+            return value > low && value < high;
+        }
+
+        public bool ValidX(int value)
+        {
+            return ValidRange(value, boardArray.GetLength(0));
+        }
+
+        public bool ValidY(int value)
+        {
+            return ValidRange(value, boardArray.GetLength(1));
         }
     }
 }
