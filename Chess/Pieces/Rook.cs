@@ -22,12 +22,14 @@ namespace Chess
 
         public Rook(bool castle, int player = 0)
         {
+            base.Player = player;
             this.canCastle = castle;
             CalculateMoves();
         }
 
         public Rook(int player)
         {
+            base.Player = player;
             CalculateMoves();
         }
 

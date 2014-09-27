@@ -51,7 +51,7 @@ namespace FormClient
             if (!(button.Tag is ChessPiece)) return;
             ChessPiece chessPiece = (ChessPiece) button.Tag;
 
-            Console.WriteLine("{0}", s);
+            Console.WriteLine("{0} from team {1}", s, chessPiece.Player);
             var moves = chessPiece.AvailableMoves;
             var attacks = chessPiece.AvailableAttacks;
 
