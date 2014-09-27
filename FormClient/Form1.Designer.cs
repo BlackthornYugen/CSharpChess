@@ -308,7 +308,7 @@
             this.Controls.Add(this.boardLayoutPanel);
             this.Name = "Form1";
             this.Text = "Form1";
-            this.Load += new System.EventHandler(this.Form1_Load);
+            this.Load += new System.EventHandler(this.Form_Load);
             this.boardLayoutPanel.ResumeLayout(false);
             this.boardLayoutPanel.PerformLayout();
             this.ResumeLayout(false);

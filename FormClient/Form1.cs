@@ -14,13 +14,14 @@ namespace FormClient
     public partial class Form1 : Form
     {
         ChessBoard chessBoard = new ChessBoard();
+        Chess.Point selectedPiece = new Chess.Point(-1, -1);
 
         public Form1()
         {
             InitializeComponent();
         }
 
-        private void Form1_Load(object sender, EventArgs e)
+        private void Form_Load(object sender, EventArgs e)
         {
             for (int x = 1; x < boardLayoutPanel.ColumnCount; x++)
             {
@@ -34,29 +35,41 @@ namespace FormClient
                     if ((x + y) % 2 == 1) button.BackColor = Color.Gray;
                     else button.BackColor = Color.DarkGray;
                     boardLayoutPanel.Controls.Add(button);
-                    button.Click += Select_Piece;
+                    button.Click += Click_Board;
                 }
             }
 
             DrawPieces(chessBoard);
         }
 
-        private void Select_Piece(object s, EventArgs e)
+        private void Click_Board(object s, EventArgs e)
         {
             DrawPieces(chessBoard);
             if (!(s is Button)) return;
             Button button = (Button)s;
             button.FlatStyle = FlatStyle.Standard;
-
-            if (!(button.Tag is ChessPiece)) return;
-            ChessPiece chessPiece = (ChessPiece) button.Tag;
             TableLayoutPanelCellPosition a = boardLayoutPanel.GetPositionFromControl((Control)s);
+
+            if (!(button.Tag is ChessPiece))
+            {
+                if (selectedPiece.x > -1 && selectedPiece.y > -1)
+                {
+                    chessBoard.ActionPiece(selectedPiece.x, selectedPiece.y, a.Column - 1, a.Row - 1);
+                    selectedPiece.x = selectedPiece.y = -1;
+                    DrawPieces(chessBoard);
+                }
+                return;
+            }
+
+            ChessPiece chessPiece = (ChessPiece) button.Tag;
             Console.WriteLine("({2}, {3}) - {0} from team {1}", chessPiece.GetType(), chessPiece.Player, a.Column - 1, a.Row - 1);
 
             foreach (Chess.Point point in chessBoard.PieceActions(a.Column - 1, a.Row - 1))
             {
                 Button actionButton = (Button)boardLayoutPanel.GetControlFromPosition(point.x + 1, point.y + 1);
                 actionButton.FlatStyle = FlatStyle.Standard;
+                selectedPiece.x = a.Column - 1;
+                selectedPiece.y = a.Row - 1;
                 Console.WriteLine("~({0}, {1})", point.x, point.y);
             }
             Console.WriteLine();
@@ -87,6 +100,7 @@ namespace FormClient
                     else
                     {
                         button.Text = "";
+                        button.Tag = null;
                     }
                     this.coordinates.SetToolTip(button, String.Format("({0}, {1})", x, y));
                 }
