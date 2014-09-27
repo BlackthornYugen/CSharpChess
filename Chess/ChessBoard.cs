@@ -104,8 +104,40 @@ namespace Chess
                 }
             }
 
-            // If movingPeice is king with "canCastle", alter moves if conditions met
-            // If movingPeice is pawn with canEnPassant or canDoubleJump, alter moves if conditions met
+            // If movingPeice is king with "canCastle", alter moves available if conditions met
+            if (movingPeice is Pawn)
+            {
+                Pawn pawn = (Pawn)movingPeice;
+                int flipDirection = 1;
+
+                if (pawn.Player == 1) flipDirection = -1;
+                if (pawn.CanEnPassantLeft)
+                {
+                    Point attackPoint;
+                    attackPoint = ChessPiece.GetDiagnalMovementArray(1, DiagnalDirection.FORWARD_LEFT)[0];
+                    attackPoint.y *= flipDirection;
+                    attackPoint.y += y;
+                    attackPoint.x += x;
+                    if (attackPoint.x >= 0 && attackPoint.x < boardArray.GetLength(0) &&
+                            attackPoint.y >= 0 && attackPoint.y < boardArray.GetLength(1))
+                    {
+                        availableActions.Add(attackPoint);
+                    }
+                }
+                if (pawn.CanEnPassantRight)
+                {
+                    Point attackPoint;
+                    attackPoint = ChessPiece.GetDiagnalMovementArray(1, DiagnalDirection.FORWARD_RIGHT)[0];
+                    attackPoint.y *= flipDirection;
+                    attackPoint.y += y;
+                    attackPoint.x += x;
+                    if (attackPoint.x >= 0 && attackPoint.x < boardArray.GetLength(0) &&
+                            attackPoint.y >= 0 && attackPoint.y < boardArray.GetLength(1))
+                    {
+                        availableActions.Add(attackPoint);
+                    }
+                }
+            }
 
             return availableActions;
         }
@@ -118,7 +150,6 @@ namespace Chess
         public ChessBoard ActionPiece(int fromX, int fromY, int toX, int toY)
         {
             ChessPiece movingPeice = boardArray[fromX, fromY];
-            movingPeice.CalculateMoves();
             return this;
         }
 

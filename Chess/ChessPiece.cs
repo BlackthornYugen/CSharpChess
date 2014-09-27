@@ -51,7 +51,7 @@ namespace Chess
         /// <param name="distance">How far in the given direction.</param>
         /// <param name="direction">Direction relative to player</param>
         /// <returns>Return an array for horizontal or virtical movment</returns>
-        protected Point[] GetMovementArray(int distance, Direction direction)
+        public static Point[] GetMovementArray(int distance, Direction direction)
         {
             Point[] movement = new Point[distance];
             int xPosition = 0;
@@ -88,7 +88,7 @@ namespace Chess
         /// <param name="distance">How far in the given direction</param>
         /// <param name="direction">Direction relative to player</param>
         /// <returns>Return an array for diagnal movement</returns>
-        protected Point[] GetDiagnalMovementArray(int distance, DiagnalDirection direction)
+        public static Point[] GetDiagnalMovementArray(int distance, DiagnalDirection direction)
         {
             Point[] attack = new Point[distance];
             int xPosition = 0;
