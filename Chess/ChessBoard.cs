@@ -159,35 +159,79 @@ namespace Chess
             return PieceActions(position.x, position.y, ignoreCheck, attackActions, moveActions, boardArray);
         }
 
+        /// <summary>
+        /// Move a peice from one location on the board to another.
+        /// </summary>
+        /// <param name="fromX">The x coordinate of the piece that is moving.</param>
+        /// <param name="fromY">The y coordinate of the piece that is moving.</param>
+        /// <param name="toX">The x coordinate of the destination.</param>
+        /// <param name="toY">The y coordinate of the destination.</param>
+        /// <returns>Returns true on success or false on failure.</returns>
         public bool ActionPiece(int fromX, int fromY, int toX, int toY)
         {
-            if (PieceActions(fromX, fromY).Contains(new Point(toX, toY)))
+            return ActionPiece(new Point(fromX, fromY), new Point(toX, toY));
+        }
+
+        /// <summary>
+        /// Move a peice from one location on the board to another.
+        /// </summary>
+        /// <param name="from">The location of the piece that is moving.</param>
+        /// <param name="to">The location to move to.</param>
+        /// <returns>Returns true on success or false on failure.</returns>
+        public bool ActionPiece(Point from, Point to)
+        {
+            if (PieceActions(from).Contains(to))
             {
-                ChessPiece movingPeice = boardArray[fromX, fromY];
-                boardArray[fromX, fromY] = null;
-                boardArray[toX, toY] = movingPeice;
+                ChessPiece movingPeice = boardArray[from.x, from.y];
                 if (movingPeice is Pawn)
                 {
-                    ((Pawn)movingPeice).CanDoubleJump = false;
+                    Pawn pawn = (Pawn)movingPeice;
+                    // If this was a double jump, check enpassant
+                    if (Math.Abs(from.y - to.y) == 2)
+                    {
+                        int adjasentX = to.x - 1;
+                        if (adjasentX > -1
+                            && boardArray[adjasentX, to.y] != null
+                            && boardArray[adjasentX, to.y].Player != movingPeice.Player
+                            && boardArray[adjasentX, to.y] is Pawn)
+                        {
+                            ((Pawn)boardArray[adjasentX, to.y]).CanEnPassantRight = true;
+                        }
+                        adjasentX += 2;
+                        if (adjasentX < COLUMNS
+                            && boardArray[adjasentX, to.y] != null
+                            && boardArray[adjasentX, to.y].Player != movingPeice.Player
+                            && boardArray[adjasentX, to.y] is Pawn)
+                        {
+                            ((Pawn)boardArray[adjasentX, to.y]).CanEnPassantLeft = true;
+                        }
+                    }
+                    // If this was a sideways jump to null, it was enpassant!
+                    if (from.x != to.x && boardArray[to.x, to.y] == null)
+                    {
+                        boardArray[to.x, from.y] = null;
+                    }
+                    // Pawns can't double jump after they move.
+                    pawn.CanDoubleJump = false;
                 }
                 if (movingPeice is Rook)
                 {
-                    ((Rook)movingPeice).CanCastle = false;
+                    Rook rook = (Rook)movingPeice;
+                    // Castling can't be done after moving
+                    rook.CanCastle = false;
                 }
                 if (movingPeice is King)
                 {
-                    ((King)movingPeice).CanCastle = false;
+                    King king = (King)movingPeice;
+                    // Castling can't be done after moving
+                    king.CanCastle = false;
                 }
-
                 movingPeice.CalculateMoves();
+                boardArray[from.x, from.y] = null;
+                boardArray[to.x, to.y] = movingPeice;
+                return true;
             }
-
             return false;
-        }
-
-        public bool ActionPiece(Point from, Point to)
-        {
-            return ActionPiece(from.x, from.y, to.x, to.y);
         }
 
         /// <summary>
