@@ -165,6 +165,20 @@ namespace Chess
             ChessPiece movingPeice = boardArray[fromX, fromY];
             boardArray[fromX, fromY] = null;
             boardArray[toX, toY] = movingPeice;
+            if (movingPeice is Pawn)
+            {
+                ((Pawn)movingPeice).CanDoubleJump = false;
+            }
+            if (movingPeice is Rook)
+            {
+                ((Rook)movingPeice).CanCastle = false;
+            }
+            if (movingPeice is King)
+            {
+                ((King)movingPeice).CanCastle = false;
+            }
+
+            movingPeice.CalculateMoves();
             return this;
         }
 
