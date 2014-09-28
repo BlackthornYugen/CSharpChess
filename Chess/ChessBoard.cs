@@ -62,7 +62,7 @@ namespace Chess
         /// <param name="moveActions">Calculate movement</param>
         /// <param name="boardArray">An optional substitute board</param>
         /// <returns>A list of points that can be moved to</returns>
-        public List<Point> PieceActions(int x, int y, bool ignoreCheck = false, bool attackActions = true, bool moveActions = true, ChessPiece[,] boardArray = null)
+        public IEnumerable<Point> PieceActions(int x, int y, bool ignoreCheck = false, bool attackActions = true, bool moveActions = true, ChessPiece[,] boardArray = null)
         {
             if (boardArray == null)
             {
@@ -154,35 +154,38 @@ namespace Chess
             return availableActions;
         }
 
-        public List<Point> PieceActions(Point position, bool ignoreCheck = false, bool attackActions = true, bool moveActions = true, ChessPiece[,] boardArray = null)
+        public IEnumerable<Point> PieceActions(Point position, bool ignoreCheck = false, bool attackActions = true, bool moveActions = true, ChessPiece[,] boardArray = null)
         {
             return PieceActions(position.x, position.y, ignoreCheck, attackActions, moveActions, boardArray);
         }
 
-        public ChessBoard ActionPiece(int fromX, int fromY, int toX, int toY)
+        public bool ActionPiece(int fromX, int fromY, int toX, int toY)
         {
-            // TODO: Validate move
-            ChessPiece movingPeice = boardArray[fromX, fromY];
-            boardArray[fromX, fromY] = null;
-            boardArray[toX, toY] = movingPeice;
-            if (movingPeice is Pawn)
+            if (PieceActions(fromX, fromY).Contains(new Point(toX, toY)))
             {
-                ((Pawn)movingPeice).CanDoubleJump = false;
-            }
-            if (movingPeice is Rook)
-            {
-                ((Rook)movingPeice).CanCastle = false;
-            }
-            if (movingPeice is King)
-            {
-                ((King)movingPeice).CanCastle = false;
+                ChessPiece movingPeice = boardArray[fromX, fromY];
+                boardArray[fromX, fromY] = null;
+                boardArray[toX, toY] = movingPeice;
+                if (movingPeice is Pawn)
+                {
+                    ((Pawn)movingPeice).CanDoubleJump = false;
+                }
+                if (movingPeice is Rook)
+                {
+                    ((Rook)movingPeice).CanCastle = false;
+                }
+                if (movingPeice is King)
+                {
+                    ((King)movingPeice).CanCastle = false;
+                }
+
+                movingPeice.CalculateMoves();
             }
 
-            movingPeice.CalculateMoves();
-            return this;
+            return false;
         }
 
-        public ChessBoard ActionPiece(Point from, Point to)
+        public bool ActionPiece(Point from, Point to)
         {
             return ActionPiece(from.x, from.y, to.x, to.y);
         }
