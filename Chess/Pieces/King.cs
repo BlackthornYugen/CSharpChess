@@ -29,16 +29,7 @@ namespace Chess
 
         public override ChessPiece CalculateMoves()
         {
-            if (this.canCastle)
-            {
-                availableMoves = new Point[10][];
-                availableMoves[8] = new[] { new Point(2, 0) };
-                availableMoves[9] = new[] { new Point(-2, 0) };
-            }
-            else
-            {
-                availableMoves = new Point[8][];
-            }
+            availableMoves = new Point[8][];
             availableMoves[0] = GetMovementArray(1, Direction.FORWARD);
             availableMoves[1] = GetMovementArray(1, Direction.BACKWARD);
             availableMoves[2] = GetMovementArray(1, Direction.LEFT);
@@ -49,8 +40,7 @@ namespace Chess
             availableMoves[6] = GetDiagnalMovementArray(1, DiagnalDirection.BACKWARD_LEFT);
             availableMoves[7] = GetDiagnalMovementArray(1, DiagnalDirection.BACKWARD_RIGHT);
 
-            availableAttacks = new Point[8][];
-            Array.Copy(availableMoves, 0, availableAttacks, 0, 8);
+            availableAttacks = availableMoves;
             return this;
         }
 

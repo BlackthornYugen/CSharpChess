@@ -115,7 +115,22 @@ namespace Chess
 
             if (movingPeice is King && ((King)movingPeice).CanCastle)
             {
-                // TODO: If movingPeice is king with "canCastle", alter moves available if conditions met                
+                int rookX = 0;
+                if (boardArray[rookX, y] is Rook && ((Rook)boardArray[rookX, y]).CanCastle)
+                {
+                    // TODO: Validate that king isn't currently in check
+                    // TODO: Validate that the king won't move through check
+                    // TODO: Validate that king won't end up in check
+                    availableActions.Add(new Point(x - 2, y));
+                }
+                rookX = COLUMNS - 1;
+                if (boardArray[rookX, y] is Rook && ((Rook)boardArray[rookX, y]).CanCastle)
+                {
+                    // TODO: Validate that king isn't currently in check
+                    // TODO: Validate that the king won't move through check
+                    // TODO: Validate that king won't end up in check
+                    availableActions.Add(new Point(x + 2, y));
+                }
             }
 
             if (movingPeice is Pawn)
@@ -211,20 +226,28 @@ namespace Chess
                     {
                         boardArray[to.x, from.y] = null;
                     }
-                    // Pawns can't double jump after they move.
-                    pawn.CanDoubleJump = false;
+
+                    pawn.CanDoubleJump = false; // Pawns can't double jump after they move.
                 }
                 if (movingPeice is Rook)
                 {
                     Rook rook = (Rook)movingPeice;
-                    // Castling can't be done after moving
-                    rook.CanCastle = false;
+                    rook.CanCastle = false; // Castling can't be done after moving
                 }
                 if (movingPeice is King)
                 {
                     King king = (King)movingPeice;
-                    // Castling can't be done after moving
-                    king.CanCastle = false;
+                    if (from.x - to.x == 2)
+                    {
+                        boardArray[to.x + 1, from.y] = boardArray[0, from.y];
+                        boardArray[0, from.y] = null;
+                    }
+                    if (from.x - to.x == -2)
+                    {
+                        boardArray[to.x - 1, from.y] = boardArray[COLUMNS - 1, from.y];
+                        boardArray[COLUMNS - 1, from.y] = null;
+                    }
+                    king.CanCastle = false; // Castling can't be done after moving
                 }
                 movingPeice.CalculateMoves();
                 boardArray[from.x, from.y] = null;
