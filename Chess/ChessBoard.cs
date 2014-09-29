@@ -119,7 +119,7 @@ namespace Chess
                 if (boardArray[rookX, y] is Rook && ((Rook)boardArray[rookX, y]).CanCastle)
                 {
                     bool missedCondition = false;
-                    foreach (int rangeX in Enumerable.Range(1, Math.Abs(rookX - x)-1))
+                    foreach (int rangeX in Enumerable.Range(rookX + 1, Math.Abs(rookX - x) - 1))
                     {
                         if (boardArray[rangeX, y] != null) missedCondition = true;
                         // TODO: Validate that the king won't move through check
@@ -132,7 +132,7 @@ namespace Chess
                 if (boardArray[rookX, y] is Rook && ((Rook)boardArray[rookX, y]).CanCastle)
                 {
                     bool missedCondition = false;
-                    foreach (int rangeX in Enumerable.Range(5, Math.Abs(rookX - x) - 1))
+                    foreach (int rangeX in Enumerable.Range(x + 1, Math.Abs(rookX - x) - 1))
                     {
                         if (boardArray[rangeX, y] != null) missedCondition = true;
                         // TODO: Validate that the king won't move through check
