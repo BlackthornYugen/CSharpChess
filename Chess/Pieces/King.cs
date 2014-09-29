@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Chess
 {
-    public class King : ChessPiece
+    public class King : CastlePiece
     {
         public King()
         {
@@ -42,18 +42,6 @@ namespace Chess
 
             availableAttacks = availableMoves;
             return this;
-        }
-
-        public bool CanCastle
-        {
-            get
-            {
-                return this.canCastle;
-            }
-            set
-            {
-                this.canCastle = value;
-            }
         }
     }
 }

@@ -239,10 +239,10 @@ namespace Chess
 
                     pawn.CanDoubleJump = false; // Pawns can't double jump after they move.
                 }
-                if (movingPeice is Rook)
+                if (movingPeice is CastlePiece)
                 {
-                    Rook rook = (Rook)movingPeice;
-                    rook.CanCastle = false; // Castling can't be done after moving
+                    CastlePiece rookOrKing = (CastlePiece)movingPeice;
+                    rookOrKing.CanCastle = false; // Castling can't be done after moving
                 }
                 if (movingPeice is King)
                 {
@@ -257,7 +257,6 @@ namespace Chess
                         boardArray[to.x - 1, from.y] = boardArray[COLUMNS - 1, from.y];
                         boardArray[COLUMNS - 1, from.y] = null;
                     }
-                    king.CanCastle = false; // Castling can't be done after moving
                 }
                 movingPeice.CalculateMoves();
                 boardArray[from.x, from.y] = null;

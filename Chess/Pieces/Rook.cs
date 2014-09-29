@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Chess
 {
-    public class Rook : ChessPiece
+    public class Rook : CastlePiece
     {
         public Rook()
         {
@@ -43,18 +43,6 @@ namespace Chess
             availableMoves[3] = GetMovementArray(MAX_DISTANCE, Direction.RIGHT);
             availableAttacks = availableMoves;
             return this;
-        }
-
-        public bool CanCastle
-        {
-            get
-            {
-                return this.canCastle;
-            }
-            set
-            {
-                this.canCastle = value;
-            }
         }
     }
 }
