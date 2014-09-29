@@ -208,6 +208,7 @@ namespace Chess
             if (PieceActions(from).Contains(to))
             {
                 ChessPiece movingPeice = boardArray[from.x, from.y];
+                ChessPiece[,] hypotheticalBoardArray = (ChessPiece[,])boardArray.Clone();
                 if (movingPeice is Pawn)
                 {
                     Pawn pawn = (Pawn)movingPeice;
@@ -216,25 +217,25 @@ namespace Chess
                     {
                         int adjasentX = to.x - 1;
                         if (adjasentX > -1
-                            && boardArray[adjasentX, to.y] != null
-                            && boardArray[adjasentX, to.y].Player != movingPeice.Player
-                            && boardArray[adjasentX, to.y] is Pawn)
+                            && hypotheticalBoardArray[adjasentX, to.y] != null
+                            && hypotheticalBoardArray[adjasentX, to.y].Player != movingPeice.Player
+                            && hypotheticalBoardArray[adjasentX, to.y] is Pawn)
                         {
-                            ((Pawn)boardArray[adjasentX, to.y]).CanEnPassantRight = true;
+                            ((Pawn)hypotheticalBoardArray[adjasentX, to.y]).CanEnPassantRight = true;
                         }
                         adjasentX += 2;
                         if (adjasentX < COLUMNS
-                            && boardArray[adjasentX, to.y] != null
-                            && boardArray[adjasentX, to.y].Player != movingPeice.Player
-                            && boardArray[adjasentX, to.y] is Pawn)
+                            && hypotheticalBoardArray[adjasentX, to.y] != null
+                            && hypotheticalBoardArray[adjasentX, to.y].Player != movingPeice.Player
+                            && hypotheticalBoardArray[adjasentX, to.y] is Pawn)
                         {
-                            ((Pawn)boardArray[adjasentX, to.y]).CanEnPassantLeft = true;
+                            ((Pawn)hypotheticalBoardArray[adjasentX, to.y]).CanEnPassantLeft = true;
                         }
                     }
                     // If this was a sideways jump to null, it was enpassant!
-                    if (from.x != to.x && boardArray[to.x, to.y] == null)
+                    if (from.x != to.x && hypotheticalBoardArray[to.x, to.y] == null)
                     {
-                        boardArray[to.x, from.y] = null;
+                        hypotheticalBoardArray[to.x, from.y] = null;
                     }
 
                     pawn.CanDoubleJump = false; // Pawns can't double jump after they move.
@@ -249,19 +250,40 @@ namespace Chess
                     King king = (King)movingPeice;
                     if (from.x - to.x == 2)
                     {
-                        boardArray[to.x + 1, from.y] = boardArray[0, from.y];
-                        boardArray[0, from.y] = null;
+                        hypotheticalBoardArray[to.x + 1, from.y] = hypotheticalBoardArray[0, from.y];
+                        hypotheticalBoardArray[0, from.y] = null;
                     }
                     if (from.x - to.x == -2)
                     {
-                        boardArray[to.x - 1, from.y] = boardArray[COLUMNS - 1, from.y];
-                        boardArray[COLUMNS - 1, from.y] = null;
+                        hypotheticalBoardArray[to.x - 1, from.y] = hypotheticalBoardArray[COLUMNS - 1, from.y];
+                        hypotheticalBoardArray[COLUMNS - 1, from.y] = null;
                     }
                 }
                 movingPeice.CalculateMoves();
-                boardArray[from.x, from.y] = null;
-                boardArray[to.x, to.y] = movingPeice;
-                return true;
+                hypotheticalBoardArray[from.x, from.y] = null;
+                hypotheticalBoardArray[to.x, to.y] = movingPeice;
+                for (int x = 0; x < hypotheticalBoardArray.GetLength(0); x++)
+                {
+                    for (int y = 0; y < hypotheticalBoardArray.GetLength(1); y++)
+                    {
+                        ChessPiece piece = hypotheticalBoardArray[x, y];
+                        if (piece != null 
+                            && piece.Player == movingPeice.Player
+                            && piece is King)
+                        {
+                            if(CheckSquareVulnerable(x, y, piece.Player, hypotheticalBoardArray))
+                            {
+                                boardArray = hypotheticalBoardArray;
+                                return true;
+                            }
+                            else
+                            {
+                                return false; // King in check
+                            }
+                        }
+                    }
+                }
+                throw new Exception("No King!");
             }
             return false;
         }
@@ -283,7 +305,7 @@ namespace Chess
             {
                 for (int y = 0; y < boardArray.GetLength(1); y++)
                 {
-                    if (boardArray[x, y].Player != player)
+                    if (boardArray[x, y] != null && boardArray[x, y].Player != player)
                     {
                         foreach (Point point in PieceActions(x, y, true, true, false, boardArray))
                         {
