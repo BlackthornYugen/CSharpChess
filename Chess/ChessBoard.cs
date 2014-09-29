@@ -118,18 +118,28 @@ namespace Chess
                 int rookX = 0;
                 if (boardArray[rookX, y] is Rook && ((Rook)boardArray[rookX, y]).CanCastle)
                 {
+                    bool missedCondition = false;
+                    foreach (int rangeX in Enumerable.Range(1, Math.Abs(rookX - x)-1))
+                    {
+                        if (boardArray[rangeX, y] != null) missedCondition = true;
+                        // TODO: Validate that the king won't move through check
+                    }
                     // TODO: Validate that king isn't currently in check
-                    // TODO: Validate that the king won't move through check
                     // TODO: Validate that king won't end up in check
-                    availableActions.Add(new Point(x - 2, y));
+                    if (!missedCondition) availableActions.Add(new Point(x - 2, y));
                 }
                 rookX = COLUMNS - 1;
                 if (boardArray[rookX, y] is Rook && ((Rook)boardArray[rookX, y]).CanCastle)
                 {
+                    bool missedCondition = false;
+                    foreach (int rangeX in Enumerable.Range(5, Math.Abs(rookX - x) - 1))
+                    {
+                        if (boardArray[rangeX, y] != null) missedCondition = true;
+                        // TODO: Validate that the king won't move through check
+                    }
                     // TODO: Validate that king isn't currently in check
-                    // TODO: Validate that the king won't move through check
                     // TODO: Validate that king won't end up in check
-                    availableActions.Add(new Point(x + 2, y));
+                    if (!missedCondition) availableActions.Add(new Point(x + 2, y));
                 }
             }
 

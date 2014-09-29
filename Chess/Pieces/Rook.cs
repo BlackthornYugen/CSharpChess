@@ -30,6 +30,7 @@ namespace Chess
         public Rook(int player)
         {
             base.Player = player;
+            this.canCastle = true;
             CalculateMoves();
         }
 
