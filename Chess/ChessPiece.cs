@@ -30,11 +30,6 @@ namespace Chess
         {
             get { return availableAttacks; }
         }
-        
-        public ChessPiece()
-        {
-            CalculateMoves();
-        }
 
         public int Player
         {
