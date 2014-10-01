@@ -186,31 +186,39 @@ namespace Chess
                 ChessPiece movingPiece = boardArray[fromPoint.x, fromPoint.y];
                 ChessPiece[,] boardArrayBackup = (ChessPiece[,])boardArray.Clone();
                 ActionPiece(fromPoint, toPoint, true);
-                for (int x = 0; x < COLUMNS; x++)
+                if (!KingInCheck(movingPiece.Player))
                 {
-                    for (int y = 0; y < ROWS; y++)
+                    availableActions.Add(toPoint);
+                }
+                boardArray = boardArrayBackup;
+                return;
+            }
+            availableActions.Add(toPoint);
+        }
+
+        public bool KingInCheck(int player)
+        {
+            for (int x = 0; x < COLUMNS; x++)
+            {
+                for (int y = 0; y < ROWS; y++)
+                {
+                    ChessPiece chessPiece = boardArray[x, y];
+                    if (chessPiece != null
+                        && chessPiece.Player == player
+                        && chessPiece is King)
                     {
-                        ChessPiece chessPiece = boardArray[x,y];
-                        if (chessPiece != null
-                            && chessPiece.Player == movingPiece.Player
-                            && chessPiece is King)
+                        if (CheckSquareVulnerable(x, y, player))
                         {
-                            if (CheckSquareVulnerable(x, y, movingPiece.Player))
-                            {
-                                boardArray = boardArrayBackup;
-                                return;
-                            }
-                            else
-                            {
-                                boardArray = boardArrayBackup;
-                                availableActions.Add(toPoint);
-                                return;
-                            }
+                            return true;
+                        }
+                        else
+                        {
+                            return false;
                         }
                     }
                 }
             }
-            availableActions.Add(toPoint);
+            throw new Exception("King wasn't found!");
         }
 
         public IEnumerable<Point> PieceActions(Point position, bool ignoreCheck = false, bool attackActions = true, bool moveActions = true, ChessPiece[,] boardArray = null)
