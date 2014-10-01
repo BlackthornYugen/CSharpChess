@@ -88,7 +88,7 @@ namespace Chess
                             // TODO: If player's king is in check after move, CONTINUE
                             if (boardArray[adjustedPoint.x, adjustedPoint.y] != null)
                             {
-                                availableActions.Add(adjustedPoint);
+                                AddMove(availableActions, new Point(x, y), adjustedPoint, ignoreCheck);
                                 break;
                             }
                         }
@@ -107,7 +107,7 @@ namespace Chess
                         {
                             // TODO: If player's king is in check after move, CONTINUE
                             if (boardArray[adjustedPoint.x, adjustedPoint.y] != null) break;
-                            availableActions.Add(adjustedPoint);
+                            AddMove(availableActions, new Point(x, y), adjustedPoint, ignoreCheck);
                         }
                     }
                 }
@@ -126,7 +126,7 @@ namespace Chess
                     }
                     // TODO: Validate that king isn't currently in check
                     // TODO: Validate that king won't end up in check
-                    if (!missedCondition) availableActions.Add(new Point(x - 2, y));
+                    if (!missedCondition) AddMove(availableActions, new Point(x, y), new Point(x - 2, y), ignoreCheck);
                 }
                 rookX = COLUMNS - 1;
                 if (boardArray[rookX, y] is Rook && ((Rook)boardArray[rookX, y]).CanCastle)
@@ -139,7 +139,7 @@ namespace Chess
                     }
                     // TODO: Validate that king isn't currently in check
                     // TODO: Validate that king won't end up in check
-                    if (!missedCondition) availableActions.Add(new Point(x + 2, y));
+                    if (!missedCondition) AddMove(availableActions, new Point(x, y), new Point(x + 2, y), ignoreCheck);
                 }
             }
 
@@ -158,7 +158,7 @@ namespace Chess
                     attackPoint.x += x;
                     if (ValidatePoint(attackPoint))
                     {
-                        availableActions.Add(attackPoint);
+                        AddMove(availableActions, new Point(x,y), attackPoint, ignoreCheck);
                     }
                 }
 
@@ -171,12 +171,44 @@ namespace Chess
                     attackPoint.x += x;
                     if (ValidatePoint(attackPoint))
                     {
-                        availableActions.Add(attackPoint);
+                        AddMove(availableActions, new Point(x, y), attackPoint, ignoreCheck);
                     }
                 }
             }
 
             return availableActions;
+        }
+
+        private void AddMove(List<Point> availableActions, Point fromPoint, Point toPoint, bool ignoreCheck = false)
+        {
+            if (!ignoreCheck)
+            {
+                ChessPiece movingPiece = boardArray[fromPoint.x, fromPoint.y];
+                ChessPiece[,] boardArrayBackup = (ChessPiece[,])boardArray.Clone();
+                ActionPiece(fromPoint, toPoint, true);
+                for (int x = 0; x < COLUMNS; x++)
+                {
+                    for (int y = 0; y < ROWS; y++)
+                    {
+                        ChessPiece chessPiece = boardArray[x,y];
+                        if (chessPiece != null
+                            && chessPiece.Player == movingPiece.Player
+                            && chessPiece is King)
+                        {
+                            if (CheckSquareVulnerable(x, y, movingPiece.Player))
+                            {
+                                boardArray = boardArrayBackup;
+                                return;
+                            }
+                            else
+                            {
+                                boardArray = boardArrayBackup;
+                            }
+                        }
+                    }
+                }
+            }
+            availableActions.Add(toPoint);
         }
 
         public IEnumerable<Point> PieceActions(Point position, bool ignoreCheck = false, bool attackActions = true, bool moveActions = true, ChessPiece[,] boardArray = null)
@@ -203,9 +235,9 @@ namespace Chess
         /// <param name="from">The location of the piece that is moving.</param>
         /// <param name="to">The location to move to.</param>
         /// <returns>Returns true on success or false on failure.</returns>
-        public bool ActionPiece(Point from, Point to)
+        public bool ActionPiece(Point from, Point to, bool bypassValidaiton = false)
         {
-            if (PieceActions(from).Contains(to))
+            if (bypassValidaiton || PieceActions(from).Contains(to))
             {
                 ChessPiece movingPeice = boardArray[from.x, from.y];
                 if (movingPeice is Pawn)
@@ -220,7 +252,8 @@ namespace Chess
                             && boardArray[adjasentX, to.y].Player != movingPeice.Player
                             && boardArray[adjasentX, to.y] is Pawn)
                         {
-                            ((Pawn)boardArray[adjasentX, to.y]).CanEnPassantRight = true;
+                            if (!bypassValidaiton) 
+                                ((Pawn)boardArray[adjasentX, to.y]).CanEnPassantRight = true;
                         }
                         adjasentX += 2;
                         if (adjasentX < COLUMNS
@@ -228,7 +261,8 @@ namespace Chess
                             && boardArray[adjasentX, to.y].Player != movingPeice.Player
                             && boardArray[adjasentX, to.y] is Pawn)
                         {
-                            ((Pawn)boardArray[adjasentX, to.y]).CanEnPassantLeft = true;
+                            if (!bypassValidaiton) 
+                                ((Pawn)boardArray[adjasentX, to.y]).CanEnPassantLeft = true;
                         }
                     }
                     // If this was a sideways jump to null, it was enpassant!
@@ -237,23 +271,25 @@ namespace Chess
                         boardArray[to.x, from.y] = null;
                     }
 
-                    pawn.CanDoubleJump = false; // Pawns can't double jump after they move.
+                    if (!bypassValidaiton) // Pawns can't double jump after they move.
+                        pawn.CanDoubleJump = false; 
                 }
                 if (movingPeice is CastlePiece)
                 {
                     CastlePiece rookOrKing = (CastlePiece)movingPeice;
-                    rookOrKing.CanCastle = false; // Castling can't be done after moving
+                    if (!bypassValidaiton) // Castling can't be done after moving
+                        rookOrKing.CanCastle = false; 
                 }
                 if (movingPeice is King)
                 {
                     King king = (King)movingPeice;
                     if (from.x - to.x == 2)
-                    {
+                    {   // Move rook for Queenside castle
                         boardArray[to.x + 1, from.y] = boardArray[0, from.y];
                         boardArray[0, from.y] = null;
                     }
                     if (from.x - to.x == -2)
-                    {
+                    {   // Move rook for Kingside castle
                         boardArray[to.x - 1, from.y] = boardArray[COLUMNS - 1, from.y];
                         boardArray[COLUMNS - 1, from.y] = null;
                     }
@@ -283,7 +319,7 @@ namespace Chess
             {
                 for (int y = 0; y < boardArray.GetLength(1); y++)
                 {
-                    if (boardArray[x, y].Player != player)
+                    if (boardArray[x, y] != null && boardArray[x, y].Player != player)
                     {
                         foreach (Point point in PieceActions(x, y, true, true, false, boardArray))
                         {
