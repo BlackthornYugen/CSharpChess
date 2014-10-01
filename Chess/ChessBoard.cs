@@ -203,6 +203,8 @@ namespace Chess
                             else
                             {
                                 boardArray = boardArrayBackup;
+                                availableActions.Add(toPoint);
+                                return;
                             }
                         }
                     }
