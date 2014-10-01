@@ -29,7 +29,7 @@ namespace Chess
 
         public override ChessPiece CalculateMoves()
         {
-            if (this.canCastle)
+            if (this.canCastle && false) // Disabled
             {
                 availableMoves = new Point[10][];
                 availableMoves[8] = new[] { new Point(2, 0) };
