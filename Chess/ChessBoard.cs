@@ -85,7 +85,6 @@ namespace Chess
                             if (boardArray[adjustedPoint.x, adjustedPoint.y] != null
                                 && boardArray[adjustedPoint.x, adjustedPoint.y].Player ==
                                 movingPeice.Player) break;
-                            // TODO: If player's king is in check after move, CONTINUE
                             if (boardArray[adjustedPoint.x, adjustedPoint.y] != null)
                             {
                                 AddMove(availableActions, new Point(x, y), adjustedPoint, ignoreCheck);
@@ -105,7 +104,6 @@ namespace Chess
                         Point adjustedPoint = new Point(movePoint.x + x, movePoint.y + y);
                         if (ValidatePoint(adjustedPoint))
                         {
-                            // TODO: If player's king is in check after move, CONTINUE
                             if (boardArray[adjustedPoint.x, adjustedPoint.y] != null) break;
                             AddMove(availableActions, new Point(x, y), adjustedPoint, ignoreCheck);
                         }
@@ -125,8 +123,9 @@ namespace Chess
                         // TODO: Validate that the king won't move through check
                     }
                     // TODO: Validate that king isn't currently in check
-                    // TODO: Validate that king won't end up in check
-                    if (!missedCondition) AddMove(availableActions, new Point(x, y), new Point(x - 2, y), ignoreCheck);
+                    missedCondition = missedCondition || KingInCheck(movingPeice.Player);
+                    if (!missedCondition) 
+                        AddMove(availableActions, new Point(x, y), new Point(x - 2, y), ignoreCheck);
                 }
                 rookX = COLUMNS - 1;
                 if (boardArray[rookX, y] is Rook && ((Rook)boardArray[rookX, y]).CanCastle)
@@ -138,8 +137,9 @@ namespace Chess
                         // TODO: Validate that the king won't move through check
                     }
                     // TODO: Validate that king isn't currently in check
-                    // TODO: Validate that king won't end up in check
-                    if (!missedCondition) AddMove(availableActions, new Point(x, y), new Point(x + 2, y), ignoreCheck);
+                    missedCondition = missedCondition || KingInCheck(movingPeice.Player);
+                    if (!missedCondition) 
+                        AddMove(availableActions, new Point(x, y), new Point(x + 2, y), ignoreCheck);
                 }
             }
 
@@ -181,19 +181,18 @@ namespace Chess
 
         private void AddMove(List<Point> availableActions, Point fromPoint, Point toPoint, bool ignoreCheck = false)
         {
+            bool kingInCheck = false;
+
             if (!ignoreCheck)
             {
                 ChessPiece movingPiece = boardArray[fromPoint.x, fromPoint.y];
                 ChessPiece[,] boardArrayBackup = (ChessPiece[,])boardArray.Clone();
                 ActionPiece(fromPoint, toPoint, true);
-                if (!KingInCheck(movingPiece.Player))
-                {
-                    availableActions.Add(toPoint);
-                }
+                kingInCheck = KingInCheck(movingPiece.Player);
                 boardArray = boardArrayBackup;
-                return;
             }
-            availableActions.Add(toPoint);
+
+            if (ignoreCheck || !kingInCheck) availableActions.Add(toPoint);
         }
 
         public bool KingInCheck(int player)
